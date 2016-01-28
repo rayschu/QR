@@ -1,24 +1,19 @@
 from PIL import Image
 import sys
-import math
 
-def makePng(input):
-#	binary = open(input,'r').read()
-	f = open(input,'r')
-	binary = f.read()
-	f.close()
-	
-	size = int(math.sqrt(len(binary)))
-	print('file len:%d\nPNG size:%d * %d' % (len(binary), size, size))
-	#new white image
-	image = Image.new("RGB", (size, size), "white")
-	
+def makeBinary(image):
+	binary = ""
+	size = image.size[0]
+	print('PNG size:%d * %d\nfile len:%d' % (size, size, size*size))
 	for i in range(0, size):
 		for j in range(0, size):
-				if binary[i*size+j] == '1':
-						#if binary has value 1 at that point in the 2D array, 
-						#set pixel to black
-						image.putpixel((i, j), (0, 0, 0))
-	image.save("output.png")
+			#if the pixel is black
+			if image.getpixel((i, j)) == (0, 0, 0):
+				binary += "1"
+			else:
+				binary += "0"
 
-makePng(sys.argv[1])
+	with open("output.txt", "w") as text_file:
+		text_file.write(str(binary))
+image = Image.open(sys.argv[1])
+makeBinary(image)
